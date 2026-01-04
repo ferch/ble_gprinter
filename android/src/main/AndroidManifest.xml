@@ -1,0 +1,9 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.ferch.ble_gprinter">
+  <application>
+    <provider
+        android:name="com.gainscha.sdk2.PrinterContentProvider"
+        android:authorities="com.gainscha.sdk2.PrinterContentProvider"
+        android:exported="false" />
+  </application>
+</manifest>

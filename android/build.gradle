@@ -1,0 +1,125 @@
+group = "com.ferch.ble_gprinter"
+version = "1.0-SNAPSHOT"
+
+buildscript {
+    ext.kotlin_version = "2.1.0"
+    repositories {
+       mavenCentral()
+        mavenLocal()
+        //佳博SDK仓库
+        maven {
+            url "http://118.31.6.84:8081/repository/maven-public/"
+            allowInsecureProtocol true
+        }
+        maven {
+            url 'https://maven.aliyun.com/nexus/content/groups/public/'
+        }
+        maven {
+            url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'
+        }
+        maven {
+            url 'https://maven.aliyun.com/nexus/content/repositories/google'
+        }
+        maven {
+            url 'https://maven.aliyun.com/nexus/content/repositories/gradle-plugin'
+        }
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.9.1")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+    }
+}
+
+allprojects {
+    repositories {
+       mavenCentral()
+        mavenLocal()
+        //佳博SDK仓库
+        maven {
+            url "http://118.31.6.84:8081/repository/maven-public/"
+            allowInsecureProtocol true
+        }
+        maven {
+            url 'https://maven.aliyun.com/nexus/content/groups/public/'
+        }
+        maven {
+            url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'
+        }
+        maven {
+            url 'https://maven.aliyun.com/nexus/content/repositories/google'
+        }
+        maven {
+            url 'https://maven.aliyun.com/nexus/content/repositories/gradle-plugin'
+        }
+        
+    }
+}
+
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+
+android {
+    namespace = "com.ferch.ble_gprinter"
+
+    compileSdk = 36
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
+    }
+
+    defaultConfig {
+        minSdk = 24
+    }
+
+    // 添加本地AAR文件支持
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+    dependencies {
+        testImplementation("org.jetbrains.kotlin:kotlin-test")
+        testImplementation("org.mockito:mockito-core:5.0.0")
+
+        // Gprinter SDK2 - 使用classes.jar
+        api files('libs/classes.jar')
+        
+        // SDK2的传递依赖
+        api 'com.jcraft:jzlib:1.1.3'
+        api 'com.gainscha:serial-port:2.1.3'
+        api 'com.gainscha:jzint:0.4.1'
+        api 'com.gainscha:fimage:1.0.0'
+        api 'androidx.annotation:annotation:1.2.0'
+        
+        // AppCompat for Activity
+        api 'androidx.appcompat:appcompat:1.6.1'
+
+        // RxJava for async operations
+        implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
+        implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+
+            testLogging {
+               events "passed", "skipped", "failed", "standardOut", "standardError"
+               outputs.upToDateWhen {false}
+               showStandardStreams = true
+            }
+        }
+    }
+}
