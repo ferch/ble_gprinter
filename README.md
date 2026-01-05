@@ -21,8 +21,7 @@ Flutter插件，用于通过蓝牙连接佳博(Gprinter)打印机并打印PDF文
 
 ```yaml
 dependencies:
-  ble_gprinter:
-    path: ../ble_gprinter
+  ble_gprinter: ^0.0.2
 ```
 
 ## Android配置
@@ -43,7 +42,28 @@ dependencies:
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
+在 `android/build.gradle.kts` 中添加佳博maven库：
 
+```
+allprojects {
+    repositories {
+         //佳博SDK仓库
+        maven {
+            url = uri("http://118.31.6.84:8081/repository/maven-public/")
+            isAllowInsecureProtocol = true
+        }
+        google {
+            url = uri("https://maven.aliyun.com/repository/google")
+        }
+        maven {
+            url = uri("https://maven.aliyun.com/repository/public")
+        }
+        maven {
+            url = uri("https://jitpack.io")
+        }
+    }
+}
+```
 ## 使用方法
 
 ### 1. 初始化插件

@@ -1,7 +1,13 @@
 name: ble_gprinter
 description: "Gprinter BLE Flutter plugin "
-version: 0.0.1
-homepage:
+version: 0.0.2
+homepage: https://github.com/ferch/ble_gprinter
+repository: https://github.com/ferch/ble_gprinter
+topics:
+  - Gprinter
+  - bluetooth
+  - android
+issue_tracker: https://github.com/ferch/ble_gprinter/issues
 
 environment:
   sdk: ^3.9.0
