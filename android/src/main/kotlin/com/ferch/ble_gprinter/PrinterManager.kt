@@ -12,6 +12,7 @@ object PrinterManager : ConnectionListener, PrinterFinder.SearchPrinterResultLis
     private var context: Context? = null
     private var currentPrinter: Printer? = null
     private val finder = PrinterFinder()
+    private var onlyGprinter: Boolean = true
     
     // 回调接口
     interface PrinterCallback {
@@ -33,6 +34,15 @@ object PrinterManager : ConnectionListener, PrinterFinder.SearchPrinterResultLis
         Printer.setLogEnable(true, null)
         Printer.addConnectionListener(this)
         Log.d(TAG, "PrinterManager initialized")
+    }
+    
+    fun setOnlyGprinter(only: Boolean) {
+        onlyGprinter = only
+        Log.d(TAG, "setOnlyGprinter: $only")
+    }
+    
+    fun getOnlyGprinter(): Boolean {
+        return onlyGprinter
     }
     
     fun startSearch() {

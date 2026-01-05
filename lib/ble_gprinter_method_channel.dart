@@ -25,8 +25,10 @@ class MethodChannelBleGprinter extends BleGprinterPlatform {
   }
 
   @override
-  Future<bool> searchPrinters() async {
-    final result = await methodChannel.invokeMethod<bool>('searchPrinters');
+  Future<bool> searchPrinters({bool onlyGprinter = true}) async {
+    final result = await methodChannel.invokeMethod<bool>('searchPrinters', {
+      'onlyGprinter': onlyGprinter,
+    });
     return result ?? false;
   }
 

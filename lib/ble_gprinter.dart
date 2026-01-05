@@ -7,8 +7,11 @@ class BleGprinter {
   }
 
   /// 搜索打印机设备
-  Future<bool> searchPrinters() {
-    return BleGprinterPlatform.instance.searchPrinters();
+  /// [onlyGprinter] 是否只搜索Gprinter品牌打印机，默认true
+  Future<bool> searchPrinters({bool onlyGprinter = true}) {
+    return BleGprinterPlatform.instance.searchPrinters(
+      onlyGprinter: onlyGprinter,
+    );
   }
 
   /// 停止搜索打印机设备

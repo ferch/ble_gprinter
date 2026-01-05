@@ -28,7 +28,7 @@ abstract class BleGprinterPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<bool> searchPrinters() {
+  Future<bool> searchPrinters({bool onlyGprinter = true}) {
     throw UnimplementedError('searchPrinters() has not been implemented.');
   }
 

@@ -133,7 +133,7 @@ class _MyAppState extends State<MyApp> {
     });
 
     try {
-      await _bleGprinterPlugin.searchPrinters();
+      await _bleGprinterPlugin.searchPrinters(onlyGprinter: false);
     } catch (e) {
       setState(() {
         _isSearching = false;

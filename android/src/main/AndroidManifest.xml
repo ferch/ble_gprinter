@@ -3,7 +3,7 @@
   <application>
     <provider
         android:name="com.gainscha.sdk2.PrinterContentProvider"
-        android:authorities="com.gainscha.sdk2.PrinterContentProvider"
+        android:authorities="${applicationId}.gainscha.provider"
         android:exported="false" />
   </application>
 </manifest>

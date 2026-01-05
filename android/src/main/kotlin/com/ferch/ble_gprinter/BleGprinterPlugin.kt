@@ -82,7 +82,7 @@ class BleGprinterPlugin : FlutterPlugin, MethodCallHandler, PrinterManager.Print
             "getPlatformVersion" -> {
                 result.success("Android ${android.os.Build.VERSION.RELEASE}")
             }
-            "searchPrinters" -> searchPrinters(result)
+            "searchPrinters" -> searchPrinters(call, result)
             "stopSearch" -> stopSearch(result)
             "connectPrinter" -> connectPrinter(call, result)
             "disconnectPrinter" -> disconnectPrinter(result)
@@ -93,8 +93,14 @@ class BleGprinterPlugin : FlutterPlugin, MethodCallHandler, PrinterManager.Print
         }
     }
 
-    private fun searchPrinters(result: Result) {
+    private fun searchPrinters(call: MethodCall, result: Result) {
         Log.d(TAG, "searchPrinters: 开始搜索打印机")
+        
+        val onlyGprinter = call.argument<Boolean>("onlyGprinter") ?: true
+        Log.d(TAG, "searchPrinters: onlyGprinter=$onlyGprinter")
+        
+        PrinterManager.setOnlyGprinter(onlyGprinter)
+        
         if (!checkBluetoothPermission()) {
             Log.e(TAG, "searchPrinters: 蓝牙权限未授予")
             result.error("PERMISSION_DENIED", "蓝牙权限未授予", null)
@@ -367,11 +373,14 @@ class BleGprinterPlugin : FlutterPlugin, MethodCallHandler, PrinterManager.Print
         if (device is BluetoothPrinterDevice) {
             val bluetoothDevice = device.bluetoothDevice
             val name = bluetoothDevice.name
+            val onlyGprinter = PrinterManager.getOnlyGprinter()
             if (name != null) {
                 // 只添加Gprinter打印机
-                if (!name.startsWith("Printer") && !name.startsWith("Gprinter") && !name.startsWith("GP")) {
-                    Log.d(TAG, "onDeviceFound: 过滤掉非打印机设备 $name")
-                    return
+                if(onlyGprinter){
+                    if (!name.startsWith("Printer") && !name.startsWith("Gprinter") && !name.startsWith("GP")) {
+                        Log.d(TAG, "onDeviceFound: 过滤掉非打印机设备 $name")
+                        return
+                    }
                 }
             } else {
                 Log.d(TAG, "onDeviceFound: 过滤掉无名称设备")
