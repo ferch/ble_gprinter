@@ -11,3 +11,6 @@
 ## 0.0.3
 - 如果没有已经缓存的设备，就构造一个蓝牙设备去连接，方便自动连接 
 - getPrinterStatus 增加`instruction` 指令集（0=ESC，1=TSC，2=ZPL，3=CPCL）字段
+
+## 0.0.4
+- bugfix

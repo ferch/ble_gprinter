@@ -21,7 +21,7 @@ Flutter插件，用于通过蓝牙连接佳博(Gprinter)打印机并打印PDF文
 
 ```yaml
 dependencies:
-  ble_gprinter: ^0.0.2
+  ble_gprinter: ^0.0.4
 ```
 
 ## Android配置
@@ -108,7 +108,8 @@ bleGprinter.onPrinterEvent.listen((event) {
 ### 3. 搜索打印机
 
 ```dart
-await bleGprinter.searchPrinters();
+//onlyGprinter 是否只搜佳博
+await bleGprinter.searchPrinters(onlyGprinter: true);
 ```
 
 ### 4. 连接打印机
@@ -139,7 +140,8 @@ if (result['success'] == true) {
 ### 6. 获取打印机状态
 
 ```dart
-final status = await bleGprinter.getPrinterStatus();
+/// [instruction] 指令集（0=ESC，1=TSC，2=ZPL，3=CPCL）
+final status = await bleGprinter.getPrinterStatus(instruction:1);
 
 print('状态码: ${status['status']}');
 print('缺纸: ${status['isOutOfPaper']}');

@@ -174,7 +174,7 @@ class BleGprinterPlugin : FlutterPlugin, MethodCallHandler, PrinterManager.Print
                 }
                 
                 val bluetoothDevice = bluetoothAdapter.getRemoteDevice(deviceAddress)
-                val bluetoothPrinterDevice = BluetoothPrinterDevice(bluetoothDevice)
+                val bluetoothPrinterDevice = BluetoothPrinterDevice(bluetoothDevice, 0)
                 
                 Log.d(TAG, "connectPrinter: 构建蓝牙设备成功，开始连接 $deviceName")
                 Printer.connect(bluetoothPrinterDevice)
