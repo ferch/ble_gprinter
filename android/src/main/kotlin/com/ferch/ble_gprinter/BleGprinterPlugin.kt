@@ -88,7 +88,7 @@ class BleGprinterPlugin : FlutterPlugin, MethodCallHandler, PrinterManager.Print
             "disconnectPrinter" -> disconnectPrinter(result)
             "isConnected" -> isConnected(result)
             "printPdf" -> printPdf(call, result)
-            "getPrinterStatus" -> getPrinterStatus(result)
+            "getPrinterStatus" -> getPrinterStatus(call, result)
             else -> result.notImplemented()
         }
     }
@@ -142,6 +142,7 @@ class BleGprinterPlugin : FlutterPlugin, MethodCallHandler, PrinterManager.Print
         result.success(true)
     }
 
+    @SuppressLint("MissingPermission")
     private fun connectPrinter(call: MethodCall, result: Result) {
         val deviceAddress = call.argument<String>("deviceAddress")
         val deviceName = call.argument<String>("deviceName")
@@ -161,8 +162,27 @@ class BleGprinterPlugin : FlutterPlugin, MethodCallHandler, PrinterManager.Print
             Printer.connect(printerDevice)
             result.success(true)
         } else {
-            Log.e(TAG, "connectPrinter: 设备未找到在缓存中，当前缓存设备数=${foundDevices.size}")
-            result.error("DEVICE_NOT_FOUND", "设备未找到，请先搜索设备", null)
+            Log.d(TAG, "connectPrinter: 设备未找到在缓存中，尝试构建蓝牙设备")
+            
+            // 构建蓝牙设备
+            try {
+                val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? android.bluetooth.BluetoothManager
+                val bluetoothAdapter = bluetoothManager?.adapter
+                if (bluetoothAdapter == null) {
+                    result.error("BLUETOOTH_NOT_AVAILABLE", "蓝牙不可用", null)
+                    return
+                }
+                
+                val bluetoothDevice = bluetoothAdapter.getRemoteDevice(deviceAddress)
+                val bluetoothPrinterDevice = BluetoothPrinterDevice(bluetoothDevice)
+                
+                Log.d(TAG, "connectPrinter: 构建蓝牙设备成功，开始连接 $deviceName")
+                Printer.connect(bluetoothPrinterDevice)
+                result.success(true)
+            } catch (e: Exception) {
+                Log.e(TAG, "connectPrinter: 构建蓝牙设备失败", e)
+                result.error("CONNECT_ERROR", "连接失败: ${e.message}", null)
+            }
         }
     }
 
@@ -200,14 +220,24 @@ class BleGprinterPlugin : FlutterPlugin, MethodCallHandler, PrinterManager.Print
         printPdfFile(pdfPath, width, height, dpi, density, speed, paperType, instruction, result)
     }
 
-    private fun getPrinterStatus(result: Result) {
+    private fun getPrinterStatus(call: MethodCall, result: Result) {
         val printer = PrinterManager.getCurrentPrinter()
         if (printer == null || !printer.isConnected) {
             result.error("NOT_CONNECTED", "打印机未连接", null)
             return
         }
+        
+        val instructionType = call.argument<Int>("instruction") ?: 1
+        val instruction = when (instructionType) {
+            0 -> Instruction.ESC
+            1 -> Instruction.TSC
+            2 -> Instruction.ZPL
+            3 -> Instruction.CPCL
+            else -> Instruction.TSC
+        }
+        Log.d(TAG, "getPrinterStatus: instruction=$instruction")
 
-        printer.getPrinterStatus(Instruction.TSC, object : PrinterResponse<PrinterState> {
+        printer.getPrinterStatus(instruction, object : PrinterResponse<PrinterState> {
             override fun onPrinterResponse(state: PrinterState?) {
                 if (state != null) {
                     val statusMap = mapOf(

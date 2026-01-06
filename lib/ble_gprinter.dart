@@ -71,8 +71,11 @@ class BleGprinter {
   }
 
   /// 获取打印机状态
-  Future<Map<String, dynamic>> getPrinterStatus() {
-    return BleGprinterPlatform.instance.getPrinterStatus();
+  /// [instruction] 指令集（0=ESC，1=TSC，2=ZPL，3=CPCL）
+  Future<Map<String, dynamic>> getPrinterStatus({int instruction = 1}) {
+    return BleGprinterPlatform.instance.getPrinterStatus(
+      instruction: instruction,
+    );
   }
 
   /// 监听打印机事件

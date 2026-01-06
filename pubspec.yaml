@@ -1,6 +1,6 @@
 name: ble_gprinter
 description: "Gprinter BLE Flutter plugin "
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/ferch/ble_gprinter
 repository: https://github.com/ferch/ble_gprinter
 topics:

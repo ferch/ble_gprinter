@@ -84,8 +84,10 @@ class MethodChannelBleGprinter extends BleGprinterPlatform {
   }
 
   @override
-  Future<Map<String, dynamic>> getPrinterStatus() async {
-    final result = await methodChannel.invokeMethod('getPrinterStatus');
+  Future<Map<String, dynamic>> getPrinterStatus({int instruction = 1}) async {
+    final result = await methodChannel.invokeMethod('getPrinterStatus', {
+      'instruction': instruction,
+    });
     return Map<String, dynamic>.from(result as Map);
   }
 

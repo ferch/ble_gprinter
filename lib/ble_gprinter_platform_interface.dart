@@ -61,7 +61,7 @@ abstract class BleGprinterPlatform extends PlatformInterface {
     throw UnimplementedError('printPdf() has not been implemented.');
   }
 
-  Future<Map<String, dynamic>> getPrinterStatus() {
+  Future<Map<String, dynamic>> getPrinterStatus({int instruction = 1}) {
     throw UnimplementedError('getPrinterStatus() has not been implemented.');
   }
 
